@@ -1,0 +1,12 @@
+[Unit]
+Description=Automatic fan control for Jetsons
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/jetson-fan-ctl
+ExecStopPost=/bin/sh -c '/bin/echo 0 > /sys/devices/pwm-fan/target_pwm'
+User=root
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
