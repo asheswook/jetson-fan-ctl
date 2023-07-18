@@ -54,19 +54,19 @@ func (c *Controller) SetSpeedFromTemp() {
 		return
 	}
 
-	curve := createCurve(c.Config.FAN_OFF_TEMP, c.Config.FAN_MAX_TEMP, 255)
-	speed := curve(temp)
-	c.SetSpeed(speed)
+	curve := createCurve(float32(c.Config.FAN_OFF_TEMP), float32(c.Config.FAN_MAX_TEMP), 255.0)
+	speed := curve(float32(temp))
+	c.SetSpeed(int(speed))
 }
 
-func square(x int) (y int) {
+func square(x float32) (y float32) {
 	y = x * x
 	return
 }
 
-func createCurve(vertex int, x2 int, y2 int) (curve func(x int) (y int)) {
-	curve = func(x int) (y int) {
-		y = y2 / square(x2 - vertex) * square(x - vertex)
+func createCurve(vertex float32, x2 float32, y2 float32) (curve func(x float32) (y float32)) {
+	curve = func(x float32) (y float32) {
+		y = y2 / square(x2-vertex) * square(x-vertex)
 		return
 	}
 	return
