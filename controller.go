@@ -26,9 +26,11 @@ func (c *Controller) SetSpeed(speed int) {
 	}
 }
 
-func (c *Controller) GetTemp() (temp int) {
+func (c *Controller) GetTemp() (temp float32) {
 	file, _ := os.ReadFile("/sys/devices/virtual/thermal/thermal_zone0/temp")
-	temp, _ = strconv.Atoi(string(file))
+	tempStr := string(file)[:2] + "." + string(file)[2:]
+	f, _ := strconv.ParseFloat(tempStr, 32)
+	temp = float32(f)
 	return
 }
 
@@ -49,13 +51,13 @@ func (c *Controller) SetClockSpeed() {
 
 func (c *Controller) SetSpeedFromTemp() {
 	temp := c.GetTemp()
-	if temp < c.Config.FAN_OFF_TEMP {
+	if temp < float32(c.Config.FAN_OFF_TEMP) {
 		c.SetSpeed(0)
 		return
 	}
 
 	curve := createCurve(float32(c.Config.FAN_OFF_TEMP), float32(c.Config.FAN_MAX_TEMP), 255.0)
-	speed := curve(float32(temp))
+	speed := curve(temp)
 	c.SetSpeed(int(speed))
 }
 
