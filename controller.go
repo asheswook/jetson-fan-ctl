@@ -32,6 +32,21 @@ func (c *Controller) GetTemp() (temp int) {
 	return 
 }
 
+func (c *Controller) SetClockSpeedMax() {
+	cmd := exec.Command("/usr/bin/jetson_clocks")
+	err := cmd.Run()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Enabled Jetson performance mode.")
+}
+
+func (c *Controller) SetClockSpeed() {
+	if c.Config.MAX_CLOCK_SPEED {
+		go c.SetClockSpeedMax()
+	}
+}
 
 func (c *Controller) SetSpeedFromTemp() {
 	temp := c.GetTemp()
