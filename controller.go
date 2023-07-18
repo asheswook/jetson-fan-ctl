@@ -8,7 +8,7 @@ import (
 )
 
 type Controller struct {
-	Config *Config
+	Config     *Config
 	CURR_SPEED int
 }
 
@@ -29,7 +29,7 @@ func (c *Controller) SetSpeed(speed int) {
 func (c *Controller) GetTemp() (temp int) {
 	file, _ := os.ReadFile("/sys/devices/virtual/thermal/thermal_zone0/temp")
 	temp, _ = strconv.Atoi(string(file))
-	return 
+	return
 }
 
 func (c *Controller) SetClockSpeedMax() {
@@ -38,13 +38,12 @@ func (c *Controller) SetClockSpeedMax() {
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println("Enabled Jetson performance mode.")
 }
 
 func (c *Controller) SetClockSpeed() {
 	if c.Config.MAX_CLOCK_SPEED {
-		go c.SetClockSpeedMax()
+		c.SetClockSpeedMax()
+		fmt.Println("Enabled Jetson performance mode.")
 	}
 }
 

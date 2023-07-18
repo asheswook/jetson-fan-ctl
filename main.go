@@ -9,9 +9,9 @@ import (
 
 func main() {
 	c := NewController()
-	fmt.Println("Initalized fan controller.")
+	fmt.Println("Initialized fan controller.")
 
-	c.SetClockSpeedMax()
+	go c.SetClockSpeed()
 
 	fmt.Println("Started automatic fan control.")
 	for {
