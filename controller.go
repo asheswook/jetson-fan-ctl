@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 )
 
 type Controller struct {
@@ -27,8 +28,13 @@ func (c *Controller) SetSpeed(speed int) {
 }
 
 func (c *Controller) GetTemp() (temp float32) {
-	file, _ := os.ReadFile("/sys/devices/virtual/thermal/thermal_zone0/temp")
-	tempStr := string(file)[:2] + "." + string(file)[2:]
+	file, err := os.ReadFile("/sys/devices/virtual/thermal/thermal_zone0/temp")
+	if err != nil {
+		panic(err)
+	}
+	tempStr := strings.Trim(string(file), "\n")
+	tempStr = strings.TrimSpace(tempStr)
+	tempStr = tempStr[:2] + "." + tempStr[2:]
 	f, _ := strconv.ParseFloat(tempStr, 32)
 	temp = float32(f)
 	return
